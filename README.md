@@ -1,1 +1,1 @@
-# crystal-examples-book-ci
+# Continuous Integration in Crystal Example
