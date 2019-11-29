@@ -4,4 +4,4 @@ Example of a Crystal project for testing TravisCI and CircleCI
 
 ## Contributors
 
-- [Franciscello](https://github.com/franciscello) - creator and maintainer
+- [Franciscello](https://github.com/ftarulla) - creator and maintainer
