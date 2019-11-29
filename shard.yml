@@ -1,0 +1,13 @@
+name: ci
+version: 0.1.0
+
+authors:
+  - Franciscello <ftarulla@manas.tech>
+
+targets:
+  ci:
+    main: src/ci.cr
+
+crystal: 0.31.1
+
+license: MIT
