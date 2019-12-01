@@ -1,9 +1,16 @@
 require "./spec_helper"
 
-describe Ci do
-  # TODO: Write tests
+describe "a new world" do
+  it "should be empty" do
+    world = World.new
+    world.is_empty?.should be_true
+  end
+end
 
-  it "works" do
-    false.should eq(true)
+describe "an empty world" do
+  it "should not be empty after adding a cell" do
+    world = World.empty
+    world.set_living_at(Location.random)
+    world.is_empty?.should be_false
   end
 end
