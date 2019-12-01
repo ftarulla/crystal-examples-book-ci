@@ -1,9 +1,18 @@
-language: crystal
+matrix:
+  include:
+    - language: crystal
+      crystal:
+        - latest
+        - nightly
+      script:
+        - crystal spec
+        - crystal tool format --check
 
-crystal:
-  - latest
-  - nightly
-
-script:
-  - crystal spec
-  - crystal tool format --check
+    - language: bash
+      sudo: required
+      services:
+        - docker
+      before_install:
+        - docker build -t testing .
+      script:
+        - docker run --rm -it testing crystal spec
