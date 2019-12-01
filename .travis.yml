@@ -3,10 +3,14 @@ matrix:
     - language: crystal
       crystal:
         - latest
+      script:
+        - crystal spec
+
+    - language: crystal
+      crystal:
         - nightly
       script:
         - crystal spec
-        - crystal tool format --check
 
     - language: bash
       sudo: required
