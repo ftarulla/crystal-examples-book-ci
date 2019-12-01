@@ -1,6 +1,6 @@
 class Location
-  getter x : Int32,
-         y : Int32
+  getter x : Int32
+  getter y : Int32
 
   def self.random
     Location.new(Random.rand(10), Random.rand(10))
