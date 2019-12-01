@@ -3,6 +3,7 @@ language: crystal
 crystal:
   - latest
   - nightly
+  - 0.30.0
 
 script:
   - crystal spec
