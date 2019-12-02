@@ -1,2 +1,2 @@
 require "spec"
-require "../src/ci"
+require "../src/game_of_life"

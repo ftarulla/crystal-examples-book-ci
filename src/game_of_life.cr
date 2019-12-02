@@ -8,10 +8,6 @@ class Location
 
   def initialize(@x, @y)
   end
-
-  def ==(other : self)
-    @x == other.x && @y == other.y
-  end
 end
 
 class World
