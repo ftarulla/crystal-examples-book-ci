@@ -13,4 +13,8 @@ describe "an empty world" do
     world.set_living_at(Location.random)
     world.is_empty?.should be_false
   end
+
+  it "should be persisted" do
+    World.empty.save
+  end
 end

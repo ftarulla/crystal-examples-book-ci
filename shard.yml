@@ -1,4 +1,4 @@
-name: ci
+name: Conway's Game of Life
 version: 0.1.0
 
 authors:
@@ -6,8 +6,12 @@ authors:
 
 targets:
   ci:
-    main: src/ci.cr
+    main: src/game_of_life.cr
 
 crystal: 0.31.1
 
 license: MIT
+
+dependencies:
+  mysql:
+    github: crystal-lang/crystal-mysql
