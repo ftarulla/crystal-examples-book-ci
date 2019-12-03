@@ -5,7 +5,6 @@ jobs:
       - image: crystallang/crystal:latest
       - image: circleci/mysql:8.0.4
         environment:
-          MYSQL_ROOT_PASSWORD:
           MYSQL_DATABASE: test
 
     steps:
@@ -31,6 +30,11 @@ jobs:
               sleep 1
             done
             echo Failed waiting for MySQL && exit 1
+      - run:
+          name: Install MySQL CLI; Import dummy data; run an example query
+          command: |
+            sudo apt-get install default-mysql-client
+            mysql -h 127.0.0.1 -u user --password="" test< test-data/test.sql
       - run:
           name: test
           command: crystal spec
