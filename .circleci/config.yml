@@ -1,0 +1,56 @@
+version: 2.1
+jobs:
+  build-latest:
+    docker:
+      - image: crystallang/crystal:latest
+    steps:
+      - checkout
+      - restore_cache:
+          # Read about caching dependencies: https://circleci.com/docs/2.0/caching/
+          key: dependency-cache-{{ checksum "shard.lock" }}
+      - run:
+          name: Install dependencies.
+          command: shards install
+      - save_cache:
+          key: dependency-cache-{{ checksum "shard.lock" }}
+          paths:
+            - ./lib
+      - run:
+          name: test
+          command: crystal spec
+  build-nightly:
+    docker:
+      - image: crystallang/crystal:nightly
+    steps:
+      - checkout
+      - restore_cache:
+      # Read about caching dependencies: https://circleci.com/docs/2.0/caching/
+          key: dependency-cache-{{ checksum "shard.lock" }}
+      - run:
+          name: Install dependencies.
+          command: shards install
+      - save_cache:
+          key: dependency-cache-{{ checksum "shard.lock" }}
+          paths:
+            - ./lib
+      - run:
+          name: test
+          command: crystal spec
+  build-0.30.0:
+    docker:
+      - image: crystallang/crystal:0.30.0
+    steps:
+      - checkout
+      - restore_cache:
+      # Read about caching dependencies: https://circleci.com/docs/2.0/caching/
+          key: dependency-cache-{{ checksum "shard.lock" }}
+      - run:
+          name: Install dependencies.
+          command: shards install
+      - save_cache:
+          key: dependency-cache-{{ checksum "shard.lock" }}
+          paths:
+            - ./lib
+      - run:
+          name: test
+          command: crystal spec
