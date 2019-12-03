@@ -54,3 +54,11 @@ jobs:
       - run:
           name: test
           command: crystal spec
+
+workflows:
+  version: 2
+  build_and_test:
+    jobs:
+      - build-latest
+      - build-nightly
+      - build-0_30_0
