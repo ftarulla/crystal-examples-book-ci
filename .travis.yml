@@ -2,6 +2,10 @@ language: crystal
 crystal:
   - latest
 
+cache:
+  directories:
+    - lib/
+
 services:
   - mysql
 
