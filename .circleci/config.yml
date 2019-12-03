@@ -5,7 +5,7 @@ jobs:
       - image: crystallang/crystal:latest
       - image: circleci/mysql:8.0.17
         environment:
-          MYSQL_DATABASE: test
+          MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
     steps:
       - checkout
       - restore_cache:
