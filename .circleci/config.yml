@@ -4,6 +4,7 @@ jobs:
     docker:
       - image: crystallang/crystal:latest
       - image: circleci/mysql:8.0.17
+        command: [--default-authentication-plugin=mysql_native_password]
         environment:
           MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
     steps:
