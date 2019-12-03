@@ -6,7 +6,6 @@ jobs:
       - image: circleci/mysql:8.0.4
         environment:
           MYSQL_DATABASE: test
-
     steps:
       - checkout
       - restore_cache:
@@ -21,7 +20,7 @@ jobs:
             - ./lib
       - run:
           name: install dockerize
-          command: sudo apt-get install wget && wget https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSION/dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz && sudo tar -C /usr/local/bin -xzvf dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz && rm dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz
+          command: apt-get install wget && wget https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSION/dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz && tar -C /usr/local/bin -xzvf dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz && rm dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz
           environment:
             DOCKERIZE_VERSION: v0.3.0
       - run:
