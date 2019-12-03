@@ -4,8 +4,7 @@ crystal:
 
 cache:
   directories:
-    - lib/
-    - shard.lock
+    - lib
 
 services:
   - mysql
