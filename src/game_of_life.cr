@@ -12,6 +12,7 @@ class Location
   end
 end
 
+
 class World
   @living_cells : Array(Location)
 
