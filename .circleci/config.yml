@@ -32,15 +32,16 @@ commands:
       - run:
           name: test
           command: crystal spec
-
+  mysql-image:
+    - image: circleci/mysql:8.0.17
+      command: [--default-authentication-plugin=mysql_native_password]
+      environment:
+        MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
 jobs:
   build-latest:
     docker:
       - image: crystallang/crystal:latest
-      - image: circleci/mysql:8.0.17
-        command: [--default-authentication-plugin=mysql_native_password]
-        environment:
-          MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
+      - mysql-image
     steps:
       - run_build_and_test
 
