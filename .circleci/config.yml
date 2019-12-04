@@ -39,7 +39,11 @@ jobs:
           command: crystal spec
   build-nightly:
     docker:
-      - image: crystallang/crystal:nightly
+      - image: crystallang/crystal:latest
+      - image: circleci/mysql:8.0.17
+        command: [--default-authentication-plugin=mysql_native_password]
+        environment:
+          MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
     steps:
       - checkout
       - restore_cache:
@@ -72,7 +76,11 @@ jobs:
           command: crystal spec
   build-0_30_0:
     docker:
-      - image: crystallang/crystal:0.30.0
+      - image: crystallang/crystal:latest
+      - image: circleci/mysql:8.0.17
+        command: [--default-authentication-plugin=mysql_native_password]
+        environment:
+          MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
     steps:
       - checkout
       - restore_cache:
