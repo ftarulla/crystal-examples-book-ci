@@ -28,7 +28,7 @@ commands:
           name: Install MySQL CLI; Import dummy data; run an example query
           command: |
             apt-get install -y mysql-client
-            mysql -h 127.0.0.1 -u root --password="" < test-data/config.sql
+            mysql -h 127.0.0.1 -u root --password="" < test-data/setup.sql
       - run:
           name: test
           command: crystal spec

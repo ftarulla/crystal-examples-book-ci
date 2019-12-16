@@ -10,7 +10,7 @@ services:
   - mysql
 
 before_install:
-  - mysql -u root --password="" < test-data/config.sql
+  - mysql -u root --password="" < test-data/setup.sql
 
 script:
   - crystal spec
