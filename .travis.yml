@@ -1,15 +1,7 @@
-language: crystal
-
-cache:
-  directories:
-    - lib
+language: bash
 
 services:
-  - mysql
   - docker
 
-before_install:
-  - mysql -u root --password="" < test-data/setup.sql
-
 script:
-  - docker run -v $PWD:/src -w /src crystallang/crystal:latest crystal spec
+  - docker run -v $PWD:/src -w /src crystallang/crystal:0.30.0 crystal spec spec/game_of_life_spec.cr
