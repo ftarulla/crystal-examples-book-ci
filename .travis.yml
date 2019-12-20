@@ -5,8 +5,8 @@ cache:
     - lib
 
 services:
-  - docker
   - mysql
+  - docker
 
 before_install:
   - mysql -u root --password="" < test-data/setup.sql
