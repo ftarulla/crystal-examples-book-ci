@@ -1,15 +1,16 @@
-language: bash
+language: crystal
+crystal:
+  - latest
 
 cache:
   directories:
     - lib
 
 services:
-  - docker
   - mysql
 
 before_install:
   - mysql -u root --password="" < test-data/setup.sql
 
 script:
-  - docker run -v $PWD:/src -w /src crystallang/crystal:latest crystal spec
+  - crystal spec
