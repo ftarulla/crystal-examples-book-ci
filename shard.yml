@@ -20,5 +20,3 @@ dependencies:
     version: ~> 2.5.0
   kemal:
     github: kemalcr/kemal
-  lucky:
-    github: luckyframework/lucky
