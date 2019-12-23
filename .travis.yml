@@ -1,19 +1,17 @@
-matrix:
-  include:
-    - language: crystal
-      crystal:
-        - latest
-      script:
-        - crystal spec spec/game_of_life_spec.cr
+language: crystal
+crystal:
+  - latest
 
-    - language: crystal
-      crystal:
-        - nightly
-      script:
-        - crystal spec spec/game_of_life_spec.cr
+cache:
+  directories:
+    - lib
+    - $HOME/.cache/shards
 
-    - language: bash
-      services:
-        - docker
-      script:
-        - docker run -v $PWD:/src -w /src crystallang/crystal:0.30.0 crystal spec spec/game_of_life_spec.cr
+services:
+  - mysql
+
+before_install:
+  - mysql -u root --password="" < test-data/setup.sql
+
+script:
+  - crystal spec

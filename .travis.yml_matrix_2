@@ -1,0 +1,19 @@
+matrix:
+  include:
+    - language: crystal
+      crystal:
+        - latest
+      script:
+        - crystal spec spec/game_of_life_spec.cr
+
+    - language: crystal
+      crystal:
+        - nightly
+      script:
+        - crystal spec spec/game_of_life_spec.cr
+
+    - language: bash
+      services:
+        - docker
+      script:
+        - docker run -v $PWD:/src -w /src crystallang/crystal:0.30.0 crystal spec spec/game_of_life_spec.cr

@@ -16,7 +16,9 @@ dependencies:
   mysql:
     github: crystal-lang/crystal-mysql
   redis:
-      github: stefanwille/crystal-redis
-      version: ~> 2.5.0
+    github: stefanwille/crystal-redis
+    version: ~> 2.5.0
   kemal:
-      github: kemalcr/kemal
+    github: kemalcr/kemal
+  lucky:
+    github: luckyframework/lucky
