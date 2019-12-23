@@ -13,9 +13,9 @@ crystal: 0.31.1
 license: MIT
 
 dependencies:
-  # mysql:
-  #   github: crystal-lang/crystal-mysql
-  #   version: 0.7.0
+  mysql:
+    github: crystal-lang/crystal-mysql
+    version: ~>0.9.0
   redis:
     github: stefanwille/crystal-redis
     version: ~> 2.5.0
