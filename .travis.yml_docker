@@ -1,22 +1,10 @@
-matrix:
-  include:
-    - language: crystal
-      crystal:
-        - latest
-      script:
-        - crystal spec
+language: bash
 
-    - language: crystal
-      crystal:
-        - nightly
-      script:
-        - crystal spec
+services:
+  - docker
 
-    - language: bash
-      sudo: required
-      services:
-        - docker
-      before_install:
-        - docker build -t testing .
-      script:
-        - docker run --rm -it testing crystal spec
+before_install: # build image using Dockerfile
+  - docker build -t testing .
+
+script:
+  - docker run --rm -it testing crystal spec spec/game_of_life_spec.cr
