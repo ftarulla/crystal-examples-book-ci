@@ -4,13 +4,13 @@ matrix:
       crystal:
         - latest
       script:
-        - crystal spec
+        - crystal spec spec/game_of_life_spec.cr
 
     - language: crystal
       crystal:
         - nightly
       script:
-        - crystal spec
+        - crystal spec spec/game_of_life_spec.cr
 
     - language: bash
       services:
