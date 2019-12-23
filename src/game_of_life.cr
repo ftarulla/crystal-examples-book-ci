@@ -1,4 +1,4 @@
-# require "mysql"
+require "mysql"
 
 class Location
   getter x : Int32
