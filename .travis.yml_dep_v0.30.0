@@ -1,0 +1,15 @@
+language: bash
+
+services:
+  - docker
+
+before_install:
+  - sudo apt-get -y install git
+
+addons:
+  apt:
+    update: true
+
+script:
+  - git --version
+  - docker run -v $PWD:/src -w /src crystallang/crystal:0.30.0 crystal spec spec/game_of_life_spec.cr
