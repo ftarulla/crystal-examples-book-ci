@@ -7,4 +7,4 @@ before_install: # build image using Dockerfile
   - docker build -t testing .
 
 script:
-  - docker run --rm -it testing crystal spec spec/game_of_life_spec.cr
+  - docker run -v $PWD:/src -w /src testing crystal spec spec/game_of_life_spec.cr
