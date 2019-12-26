@@ -5,8 +5,6 @@ services:
 
 before_install:
   - sudo apt-get -y install git
-  # build image using Dockerfile:
-  - docker build -t testing .
 
 addons:
   apt:

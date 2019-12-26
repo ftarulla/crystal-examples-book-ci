@@ -3,7 +3,8 @@ language: bash
 services:
   - docker
 
-before_install: # build image using Dockerfile
+before_install:
+  # build image using Dockerfile:
   - docker build -t testing .
 
 script:
