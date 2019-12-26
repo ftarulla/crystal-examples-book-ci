@@ -1,4 +1,4 @@
-require "mysql"
+# require "mysql"
 
 class Location
   getter x : Int32
@@ -35,9 +35,9 @@ class World
     @living_cells.size == 0
   end
 
-  def save
-    DB.connect "mysql://root@localhost/test", do |cnn|
-      cnn.exec("insert into worlds (living_cells) values (?);", @living_cells.size)
-    end
-  end
+  # def save
+  #   DB.connect "mysql://root@localhost/test", do |cnn|
+  #     cnn.exec("insert into worlds (living_cells) values (?);", @living_cells.size)
+  #   end
+  # end
 end
