@@ -1,0 +1,14 @@
+language: crystal
+crystal:
+  - latest
+
+before_install:
+  - sudo apt-get -y install git
+
+addons:
+  apt:
+    update: true
+
+script:
+  - git --version
+  - crystal spec spec/game_of_life_spec.cr

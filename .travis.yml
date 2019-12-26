@@ -1,14 +1,16 @@
-language: crystal
-crystal:
-  - latest
+language: bash
+
+services:
+  - docker
 
 before_install:
-  - sudo apt-get -y install git
-
-addons:
-  apt:
-    update: true
+  # build image using Dockerfile:
+  - docker build -t testing .
+  # GIT installed
+  - git --version # =>
 
 script:
-  - git --version
-  - crystal spec spec/game_of_life_spec.cr
+  # run specs in the container
+  - docker run -v $PWD:/src -w /src testing crystal spec spec/game_of_life_spec.cr
+  # GIT installed in Docker container
+  - docker run -v $PWD:/src -w /src git --version # =>
