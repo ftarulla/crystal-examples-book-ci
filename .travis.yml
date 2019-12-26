@@ -1,16 +1,20 @@
-language: bash
+language: crystal
+crystal:
+  - latest
+
+env:
+  - DATABASE_URL="mysql://root@localhost/test"
+
+cache:
+  directories:
+    - lib
+    - $HOME/.cache/shards
 
 services:
-  - docker
+  - mysql
 
 before_install:
-  # build image using Dockerfile:
-  - docker build -t testing .
-  # GIT installed
-  - git --version # => 2.21.0
+  - mysql -u root --password="" < test-data/setup.sql
 
 script:
-  # run specs in the container
-  - docker run -v $PWD:/src -w /src testing crystal spec spec/game_of_life_spec.cr
-  # GIT installed in Docker container
-  - docker run -v $PWD:/src -w /src testing git --version # =>
+  - crystal spec
