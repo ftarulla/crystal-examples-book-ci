@@ -1,3 +1,5 @@
 FROM crystallang/crystal:latest
 
-RUN apt-get update && apt-get install -y git=2.20.1
+# # install latest version
+# RUN add-apt-repository ppa:git-core/ppa
+RUN apt-get update && apt-get install -y git
