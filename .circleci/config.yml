@@ -32,6 +32,8 @@ commands:
       - run:
           name: test
           command: crystal spec
+          environment:
+            DATABASE_URL: mysql://root@localhost/test
 
 executors:
   crystal-mysql:
