@@ -14,75 +14,34 @@ commands:
           environment:
             DOCKERIZE_VERSION: v0.6.1
 
-  run_build_and_test:
+jobs:
+  build-latest:
+    docker:
+      - image: crystallang/crystal:latest
+      - image: circleci/mysql:8.0.17
+        command: [--default-authentication-plugin=mysql_native_password]
+        environment:
+          MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
     steps:
       - checkout
-      - restore_cache:
-          # key: dependency-cache-  # Find the most recently generated cache used from any branch
-          key: dependency-cache-{{ checksum ".circleci/cache_version.yml" }}
       - run:
           name: Install dependencies.
           command: shards install
-      - save_cache:
-          key: dependency-cache-{{ checksum ".circleci/cache_version.yml" }}
-          paths:
-            - ./lib
-            - ~/.cache/shards
-      - run:
-          name: version
-          command: cat /etc/*-release
       - install_dockerize
       - run:
           name: Wait for db using Dockerize
           command: dockerize -wait tcp://localhost:3306 -timeout 1m
       - run:
-          name: Install MySQL CLI; Import dummy data; run an example query
+          name: Install MySQL CLI; Import dummy data
           command: |
             apt-get install -y mysql-client
             mysql -h 127.0.0.1 -u root --password="" < test-data/setup.sql
       - run:
           name: test
           command: crystal spec
-          environment:
-            DATABASE_URL: mysql://root@localhost/test
-
-executors:
-  crystal-mysql:
-    parameters:
-      tag:
-        type: string
-        default: latest
-    docker:
-      - image: crystallang/crystal:<< parameters.tag >>
-      - image: circleci/mysql:8.0.17
-        command: [--default-authentication-plugin=mysql_native_password]
-        environment:
-          MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
-
-jobs:
-  build-latest:
-    executor: crystal-mysql
-    steps:
-      - run_build_and_test
-
-  build-nightly:
-    executor:
-      name: crystal-mysql
-      tag: "nightly"
-    steps:
-      - run_build_and_test
-
-  build-0_30_0:
-    executor:
-      name: crystal-mysql
-      tag: "0.30.0"
-    steps:
-      - run_build_and_test
 
 workflows:
-  version: 2
+  version: 2.1
   build_and_test:
     jobs:
       - build-latest
-      - build-nightly
-      - build-0_30_0
