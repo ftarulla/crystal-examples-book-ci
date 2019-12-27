@@ -49,7 +49,7 @@ executors:
     docker:
       - image: crystallang/crystal:<< parameters.tag >>
         environment:
-          CACHE_VERSION: "v1"
+          CACHE_VERSION: v1
       - image: circleci/mysql:8.0.17
         command: [--default-authentication-plugin=mysql_native_password]
         environment:
