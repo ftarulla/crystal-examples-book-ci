@@ -24,9 +24,16 @@ jobs:
           MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
     steps:
       - checkout
+      - restore_cache:
+          key: dependency-cache-{{ checksum ".circleci/cache_version.yml" }}
       - run:
           name: Install dependencies.
           command: shards install
+      - save_cache:
+          key: dependency-cache-{{ checksum ".circleci/cache_version.yml" }}
+          paths:
+            - ./lib
+            - ~/.cache/shards
       - install_dockerize
       - run:
           name: Wait for db using Dockerize
