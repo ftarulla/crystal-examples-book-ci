@@ -3,7 +3,7 @@ version: 2.1
 commands:
   run_build_and_test:
     environment:
-      CACHE_VERSION: v1
+      CACHE_VERSION: "v1"
     steps:
       - checkout
       - run:
