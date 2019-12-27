@@ -1,7 +1,10 @@
 version: 2.1
 
+orbs:
+  dockerize: ganta/dockerize@1.3.2
+
 commands:
-  install_dockerize: # https://github.com/jwilder/dockerize
+  install_dockerize:
     steps:
       - run:
           name: Install dockerize.
@@ -17,6 +20,9 @@ commands:
   run_build_and_test:
     steps:
       - checkout
+      # - run:
+      #     name: list project files
+      #     command: ls -lah
       - restore_cache:
           # Find the most recently generated cache used from any branch
           key: dependency-cache-
@@ -32,9 +38,15 @@ commands:
           name: version
           command: cat /etc/*-release
       - install_dockerize
-      - run:
-          name: Wait for db using Dockerize
-          command: dockerize -wait tcp://localhost:3306 -timeout 1m
+      # - run:
+      #     name: Install dockerize.
+      #     command: apt-get update && apt-get install -y wget && wget https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSION/dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz && tar -C /usr/local/bin -xzvf dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz && rm dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz
+      #     environment:
+      #       DOCKERIZE_VERSION: v0.6.1
+      # - run:
+      #     name: Wait for db
+      #     command: dockerize -wait tcp://localhost:3306 -timeout 1m
+      - dockerize/wait-mysql
       - run:
           name: Install MySQL CLI; Import dummy data; run an example query
           command: |
