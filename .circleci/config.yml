@@ -8,7 +8,7 @@ commands:
           name: list project files
           command: ls -lah
       - restore_cache:
-          key: dependency-cache-{{ checksum "shard.lock" }}
+          key: dependency-cache-
       - run:
           name: Install dependencies.
           command: shards install
