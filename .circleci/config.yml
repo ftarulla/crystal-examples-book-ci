@@ -32,7 +32,7 @@ commands:
       # - run:
       #     name: Wait for db
       #     command: dockerize -wait tcp://localhost:3306 -timeout 1m
-      - wait-mysql
+      - dockerize/wait-mysql
       - run:
           name: Install MySQL CLI; Import dummy data; run an example query
           command: |
