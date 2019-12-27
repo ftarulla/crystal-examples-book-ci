@@ -14,7 +14,7 @@ commands:
           name: Install dependencies.
           command: shards install
       - save_cache:
-          key: dependency-cache-{{ .Environment.CACHE_VERSION }}
+          key: dependency-cache-v1
           paths:
             - ./lib
             - ~/.cache/shards
@@ -48,8 +48,6 @@ executors:
         default: latest
     docker:
       - image: crystallang/crystal:<< parameters.tag >>
-        environment:
-          CACHE_VERSION: v1
       - image: circleci/mysql:8.0.17
         command: [--default-authentication-plugin=mysql_native_password]
         environment:
