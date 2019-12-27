@@ -4,6 +4,9 @@ commands:
   run_build_and_test:
     steps:
       - checkout
+      - run:
+          name: list project files
+          command: ls -lah
       - restore_cache:
           key: dependency-cache-{{ checksum "shard.lock" }}
       - run:
