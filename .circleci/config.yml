@@ -39,6 +39,8 @@ jobs:
       - run:
           name: test
           command: crystal spec
+          environment:
+            DATABASE_URL: mysql://root@localhost/test
 
 workflows:
   version: 2.1
