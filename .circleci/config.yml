@@ -18,13 +18,13 @@ commands:
     steps:
       - checkout
       - restore_cache:
-          # Find the most recently generated cache used from any branch
-          key: dependency-cache-
+          # key: dependency-cache-  # Find the most recently generated cache used from any branch
+          key: dependency-cache-{{ checksum ".circleci/cache_version.yml" }}
       - run:
           name: Install dependencies.
           command: shards install
       - save_cache:
-          key: dependency-cache-v1
+          key: dependency-cache-{{ checksum ".circleci/cache_version.yml" }}
           paths:
             - ./lib
             - ~/.cache/shards
