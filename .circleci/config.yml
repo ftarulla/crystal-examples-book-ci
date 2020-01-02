@@ -21,9 +21,8 @@ commands:
           name: version
           command: cat /etc/*-release
       - run:
-          name: Install `curl`
-          command: apt-get update && apt-get install -y curl
-
+          name: Install `curl` and `jq` for `docker/install-dockerize` command
+          command: apt-get update && apt-get install -y curl jq
       - docker/install-dockerize
       - run:
           name: Wait for db using Dockerize
