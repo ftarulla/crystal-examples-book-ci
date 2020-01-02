@@ -22,7 +22,7 @@ commands:
           command: cat /etc/*-release
       - run:
           name: Install `curl`
-          command: apt-get update && apt-get install -y wget
+          command: apt-get update && apt-get install -y curl
 
       - docker/install-dockerize
       - run:
