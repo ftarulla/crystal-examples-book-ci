@@ -1,0 +1,20 @@
+language: crystal
+crystal:
+  - latest
+
+env:
+  - DATABASE_URL="mysql://root@localhost/test"
+
+cache:
+  directories:
+    - lib
+    - $HOME/.cache/shards
+
+services:
+  - mysql
+
+before_install:
+  - mysql -u root --password="" < test-data/setup.sql
+
+script:
+  - crystal spec

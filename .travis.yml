@@ -2,19 +2,13 @@ language: crystal
 crystal:
   - latest
 
-env:
-  - DATABASE_URL="mysql://root@localhost/test"
-
-cache:
-  directories:
-    - lib
-    - $HOME/.cache/shards
-
-services:
-  - mysql
-
 before_install:
-  - mysql -u root --password="" < test-data/setup.sql
+  - sudo apt-get -y install sqlite3
+
+addons:
+  apt:
+    update: true
 
 script:
-  - crystal spec
+  - sqlite3 --version
+  - crystal spec spec/game_of_life_spec.cr
