@@ -16,14 +16,10 @@ class World
   @living_cells : Array(Location)
 
   def self.empty
-    World.new([] of Location)
+    new
   end
 
-  def initialize
-    initialize([] of Location)
-  end
-
-  def initialize(living_cells)
+  def initialize(living_cells = [] of Location)
     @living_cells = living_cells
   end
 
@@ -36,7 +32,7 @@ class World
   end
 
   def save
-    DB.connect ENV["DATABASE_URL"], do |cnn|
+    DB.connect ENV["DATABASE_URL"] do |cnn|
       cnn.exec("insert into worlds (living_cells) values (?);", @living_cells.size)
     end
   end
