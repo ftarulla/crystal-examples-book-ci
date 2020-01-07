@@ -1,7 +1,7 @@
 version: 2.1
 
 orbs:
-  crystal:
+  db:
     orbs:
       docker: circleci/docker@0.5.20
     commands:
@@ -31,6 +31,19 @@ orbs:
           - run:
               name: Wait for db using Dockerize
               command: dockerize -wait << parameters.host >>:<< parameters.port >> -timeout << parameters.timeout >>
+      import_data:
+        parameters:
+          from:
+            type: string
+        steps:
+          - run:
+            name: Install MySQL CLI; Import dummy data; run an example query
+            command: |
+              apt-get install -y mysql-client
+              mysql -h 127.0.0.1 -u root --password="" < << parameters.from >>
+
+  crystal:
+    commands:
       cache_restore:
         steps:
           - restore_cache:
@@ -51,7 +64,6 @@ orbs:
               name: Install dependencies.
               command: shards install
 
-
 commands:
   run_build_and_test:
     steps:
@@ -59,12 +71,9 @@ commands:
       - crystal/cache_restore
       - crystal/shards_install
       - crystal/cache_save
-      - crystal/wait_for_db
-      - run:
-          name: Install MySQL CLI; Import dummy data; run an example query
-          command: |
-            apt-get install -y mysql-client
-            mysql -h 127.0.0.1 -u root --password="" < test-data/setup.sql
+      - db/wait_for_db
+      - db/import_data
+          from: "test-data/setup.sql"
       - run:
           name: test
           command: crystal spec
