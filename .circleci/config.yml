@@ -72,7 +72,7 @@ commands:
       - crystal/shards_install
       - crystal/cache_save
       - db/wait_for_db
-      - db/import_data
+      - db/import_data:
           from: "test-data/setup.sql"
       - run:
           name: test
