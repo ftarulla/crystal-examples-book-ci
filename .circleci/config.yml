@@ -1,32 +1,62 @@
 version: 2.1
 
 orbs:
-  docker: circleci/docker@0.5.20
+  crystal:
+    orbs:
+      docker: circleci/docker@0.5.20
+    commands:
+      install-dockerize:
+        parameters:
+          version:
+            type: string
+            default: v0.6.1
+        steps:
+          - run:
+              name: Install `curl` and `jq` for `docker/install-dockerize` command
+              command: apt-get update && apt-get install -y curl jq
+          - docker/install-dockerize
+      wait_for_db:
+        parameters:
+          timeout:
+            type: string
+            default: 1m
+          host:
+            type: string
+            default: tcp://localhost
+          port:
+            type: integer
+            default: 3306
+        steps:
+          - crystal/install-dockerize
+          - run:
+              name: Wait for db using Dockerize
+              command: dockerize -wait << parameters.host >>:<< parameters.port >> -timeout << parameters.timeout >>
+      cache_restore:
+        steps:
+          - restore_cache:
+              key: dependency-cache-{{ checksum ".circleci/cache_version.yml" }}
+      cache_save:
+        steps:
+          - save_cache:
+              key: dependency-cache-{{ checksum ".circleci/cache_version.yml" }}
+              paths:
+                - ./lib
+                - ~/.cache/shards
+      shards_install:
+        steps:
+          - run:
+            name: Install dependencies.
+            command: shards install
+
 
 commands:
   run_build_and_test:
     steps:
       - checkout
-      - restore_cache:
-          key: dependency-cache-{{ checksum ".circleci/cache_version.yml" }}
-      - run:
-          name: Install dependencies.
-          command: shards install
-      - save_cache:
-          key: dependency-cache-{{ checksum ".circleci/cache_version.yml" }}
-          paths:
-            - ./lib
-            - ~/.cache/shards
-      - run:
-          name: version
-          command: cat /etc/*-release
-      - run:
-          name: Install `curl` and `jq` for `docker/install-dockerize` command
-          command: apt-get update && apt-get install -y curl jq
-      - docker/install-dockerize
-      - run:
-          name: Wait for db using Dockerize
-          command: dockerize -wait tcp://localhost:3306 -timeout 1m
+      - crystal/cache_restore
+      - crystal/shards_install
+      - crystal/cache_save
+      - crystal/wait_for_db
       - run:
           name: Install MySQL CLI; Import dummy data; run an example query
           command: |
