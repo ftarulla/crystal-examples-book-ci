@@ -1,7 +1,7 @@
 version: 2.1
 
 orbs:
-  manas.tech/crystal:
+  manastech/crystal:
     orbs:
       docker: circleci/docker@0.5.20
     commands:
@@ -53,10 +53,10 @@ commands:
   run_build_and_test:
     steps:
       - checkout
-      - manas.tech/crystal/cache_restore
-      - manas.tech/crystal/shards_install
-      - manas.tech/crystal/cache_save
-      - manas.tech/crystal/wait_for_db
+      - manastech/crystal/cache_restore
+      - manastech/crystal/shards_install
+      - manastech/crystal/cache_save
+      - manastech/crystal/wait_for_db
       - run:
           name: Install MySQL CLI; Import dummy data; run an example query
           command: |
