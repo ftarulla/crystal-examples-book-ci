@@ -34,7 +34,7 @@ orbs:
       cache_restore:
         steps:
           - restore_cache:
-              key: dependency-cache-{{ checksum "shard.lock" }}
+              key: dependency-cache-
       cache_save:
         steps:
           - save_cache:
