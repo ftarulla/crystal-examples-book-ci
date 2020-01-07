@@ -45,8 +45,8 @@ orbs:
       shards_install:
         steps:
           - run:
-            name: Install dependencies.
-            command: shards install
+              name: Install dependencies.
+              command: shards install
 
 
 commands:
