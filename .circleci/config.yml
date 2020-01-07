@@ -35,12 +35,13 @@ orbs:
         steps:
           - restore_cache:
               keys:
-                - dependency-cache-{{ checksum "shard.lock" }}
-                - dependency-cache
+                - shards-cache-{{ .Branch }}-{{ checksum "shard.lock" }}
+                - shards-cache-{{ .Branch }}
+                - shards-cache
       cache_save:
         steps:
           - save_cache:
-              key: dependency-cache-{{ checksum "shard.lock" }}
+              key: shards-cache-{{ .Branch }}-{{ checksum "shard.lock" }}
               paths:
                 - ./lib
                 - ~/.cache/shards
