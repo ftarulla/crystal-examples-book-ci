@@ -149,6 +149,7 @@ workflows:
   build_and_test:
     jobs:
       - crystal/test-with-db:
+          name: "Test using db and Crystal:latest"
           executor: db/crystal-mysql
           DATABASE_URL: mysql://root@localhost/test
           db-steps:
@@ -156,6 +157,7 @@ workflows:
             - db/import_data:
                 from: "test-data/setup.sql"
       - crystal/test-with-db:
+          name: "Test using db and Crystal:nightly"
           executor:
             name: db/crystal-mysql
             tag: "nightly"
