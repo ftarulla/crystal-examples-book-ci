@@ -1,71 +1,25 @@
 version: 2.1
 
 orbs:
-  db:
-    orbs:
-      docker: circleci/docker@0.5.20
-    executors:
-      crystal-mysql:
-        parameters:
-          tag:
-            type: string
-            default: latest
-        docker:
-          - image: crystallang/crystal:<< parameters.tag >>
-          - image: circleci/mysql:8.0.17
-            command: [--default-authentication-plugin=mysql_native_password]
-            environment:
-              MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
-    commands:
-      install-dockerize:
-        parameters:
-          version:
-            type: string
-            default: v0.6.1
-        steps:
-          - run:
-              name: Install `curl` and `jq` for `docker/install-dockerize` command
-              command: apt-get update && apt-get install -y curl jq
-          - docker/install-dockerize
-      wait_for_db:
-        parameters:
-          timeout:
-            type: string
-            default: 1m
-          host:
-            type: string
-            default: tcp://localhost
-          port:
-            type: integer
-            default: 3306
-        steps:
-          - install-dockerize
-          - run:
-              name: Wait for db using Dockerize
-              command: dockerize -wait << parameters.host >>:<< parameters.port >> -timeout << parameters.timeout >>
-      import_data:
-        parameters:
-          from:
-            type: string
-        steps:
-          - run:
-              name: Install MySQL CLI; Import dummy data; run an example query
-              command: |
-                apt-get install -y mysql-client
-                mysql -h 127.0.0.1 -u root --password="" < << parameters.from >>
-
+  docker: circleci/docker@0.5.20
   crystal:
     executors:
-      crystal-executor:
+      default:
         parameters:
-          tag:
+          version:
+            description: "Crystal version. Valid values: latest, nightly or M.m.p"
             type: string
             default: latest
         docker:
-          - image: crystallang/crystal:<< parameters.tag >>
+          - image: crystallang/crystal:<< parameters.version >>
     commands:
       cache_restore:
         steps:
+          - restore_cache:
+              keys:
+                - shards-cache-{{ .Branch }}-{{ checksum "shard.yml" }}
+                - shards-cache-{{ .Branch }}
+                - shards-cache
           - restore_cache:
               keys:
                 - shards-cache-{{ .Branch }}-{{ checksum "shard.lock" }}
@@ -76,7 +30,10 @@ orbs:
           - save_cache:
               key: shards-cache-{{ .Branch }}-{{ checksum "shard.lock" }}
               paths:
-                - ./lib
+                - ~/.cache/shards
+          - save_cache:
+              key: shards-cache-{{ .Branch }}-{{ checksum "shard.yml" }}
+              paths:
                 - ~/.cache/shards
       shards_install:
         steps:
@@ -85,87 +42,131 @@ orbs:
               command: shards install
       test:
         parameters:
-          files: # files separated by space
+          spec_options: # files separated by space
             type: string
             default: ""
         steps:
           - run:
               name: run tests
-              command: crystal spec << parameters.files >>
-      test-with-db:
-        parameters:
-          files: # files separated by space
-            type: string
-            default: ""
-          DATABASE_URL:
-            type: string
-            default: mysql://root@localhost/default
-        steps:
-          - run:
-              name: run tests
-              command: crystal spec << parameters.files >>
-              environment:
-                DATABASE_URL: << parameters.DATABASE_URL >>
+              command: crystal spec << parameters.spec_options >>
     jobs:
-      test: # run tests with specified Crystal version
+      test:
+        description: "Run tests with specified Crystal version"
         parameters:
           version:
             type: string
             default: latest
-          files: # files separated by space
+          spec_options:
             type: string
             default: ""
         executor:
-          name: crystal-executor
-          tag: << parameters.version >>
+          name: default
+          version: << parameters.version >>
         steps:
           - checkout
           - cache_restore
           - shards_install
           - cache_save
           - test:
-              files: << parameters.files >>
-      test-with-db:
-        parameters:
-          executor:
-            type: executor
-          db-steps:
-            type: steps
-          DATABASE_URL:
-            type: string
-            default: mysql://root@localhost/default
-        executor: << parameters.executor >>
-        steps:
-          - checkout
-          - cache_restore
-          - shards_install
-          - cache_save
-          - steps: << parameters.db-steps >>
-          - test-with-db:
-              DATABASE_URL: << parameters.DATABASE_URL >>
+              spec_options: << parameters.spec_options >>
+
+# DB executors
+executors:
+  crystal_mysql:
+    parameters:
+      tag:
+        type: string
+        default: latest
+    docker:
+      - image: crystallang/crystal:<< parameters.tag >>
+      - image: circleci/mysql:8.0.17
+        command: [--default-authentication-plugin=mysql_native_password]
+        environment:
+          MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
+
+# DB commands
+commands:
+  install_dockerize:
+    parameters:
+      version:
+        type: string
+        default: v0.6.1
+    steps:
+      - run:
+          name: Install `curl` and `jq` for `docker/install-dockerize` command
+          command: apt-get update && apt-get install -y curl jq
+      - docker/install-dockerize
+  wait_for_db:
+    parameters:
+      timeout:
+        type: string
+        default: 1m
+      host:
+        type: string
+        default: tcp://localhost
+      port:
+        type: integer
+        default: 3306
+    steps:
+      - install-dockerize
+      - run:
+          name: Wait for db using Dockerize
+          command: dockerize -wait << parameters.host >>:<< parameters.port >> -timeout << parameters.timeout >>
+  import_data:
+    parameters:
+      from:
+        type: string
+    steps:
+      - run:
+          name: Install MySQL CLI; Import dummy data; run an example query
+          command: |
+            apt-get install -y mysql-client
+            mysql -h 127.0.0.1 -u root --password="" < << parameters.from >>
+
+# DB jobs
+jobs:
+  test_with_db:
+    parameters:
+      executor:
+        type: executor
+      DATABASE_URL:
+        type: string
+        default: mysql://root@localhost/default
+      spec_options: # files separated by space
+        type: string
+        default: ""
+    executor: << parameters.executor >>
+    steps:
+      - checkout
+      - cache_restore
+      - shards_install
+      - cache_save
+      - wait_for_db
+      - import_data:
+          from: "test-data/setup.sql"
+      - run:
+          name: run tests
+          command: crystal spec << parameters.spec_options >>
+          environment:
+            DATABASE_URL: << parameters.DATABASE_URL >>
 
 workflows:
   version: 2
   build_and_test:
     jobs:
-      - crystal/test-with-db:
-          name: "Test using db and Crystal:latest"
-          executor: db/crystal-mysql
-          DATABASE_URL: mysql://root@localhost/test
-          db-steps:
-            - db/wait_for_db
-            - db/import_data:
-                from: "test-data/setup.sql"
-      - crystal/test-with-db:
-          name: "Test using db and Crystal:nightly"
-          executor:
-            name: db/crystal-mysql
-            tag: "nightly"
-          DATABASE_URL: mysql://root@localhost/test
-          db-steps:
-            - db/wait_for_db
-            - db/import_data:
-                from: "test-data/setup.sql"
-      - crystal/test:
-          name: "Test without DB"
-          files: "./spec/game_of_life_spec.cr"
+      - test_with_db_latest:
+          steps:
+            - test_with_db:
+                executor: crystal_mysql
+                DATABASE_URL: mysql://root@localhost/test
+      - test_with_db_nightly:
+          steps:
+            - test_with_db:
+                executor:
+                  name: crystal_mysql
+                  version: "nightly"
+                DATABASE_URL: mysql://root@localhost/test
+      - test_latest:
+          steps:
+            - crystal/test:
+                spec_options: "./spec/game_of_life_spec.cr"
