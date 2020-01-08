@@ -136,9 +136,9 @@ orbs:
             default: mysql://root@localhost/default
         steps:
           - checkout
-          - crystal/cache_restore
-          - crystal/shards_install
-          - crystal/cache_save
+          - cache_restore
+          - shards_install
+          - cache_save
           - steps: << parameters.db-steps >>
           - test-with-db:
               files: << parameters.files >>
