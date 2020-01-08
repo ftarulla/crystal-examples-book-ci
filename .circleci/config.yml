@@ -83,6 +83,7 @@ executors:
         command: [--default-authentication-plugin=mysql_native_password]
         environment:
           MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
+          DATABASE_URL: mysql://root@localhost/test
 
 # DB commands
 commands:
@@ -132,10 +133,7 @@ jobs:
       spec_options:
         type: string
         default: ""
-    executor:
-      name: << parameters.executor >>
-      environment:
-        DATABASE_URL: mysql://root@localhost/test
+    executor: << parameters.executor >>
     steps:
       - checkout
       - crystal/cache_restore
