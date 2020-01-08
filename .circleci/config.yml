@@ -166,6 +166,6 @@ workflows:
             - db/wait_for_db
             - db/import_data:
                 from: "test-data/setup.sql"
-      # - build-latest
-      # - build-nightly
-      # - build-0_30_0
+      - crystal/test:
+          name: "Test without DB"
+          files: "./spec/game_of_life_spec.cr"
