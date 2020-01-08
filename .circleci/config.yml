@@ -76,10 +76,26 @@ orbs:
           files: # files separated by space
             type: string
             default: ""
+          environment:
+            type:
         steps:
           - run:
               name: run tests
               command: crystal spec << parameters.files >>
+      test-with-db:
+        parameters:
+          files: # files separated by space
+            type: string
+            default: ""
+          DATABASE_URL:
+            type: string
+            default: mysql://root@localhost/test
+        steps:
+          - run:
+              name: run tests
+              command: crystal spec << parameters.files >>
+              environment:
+                DATABASE_URL: << parameters.DATABASE_URL >>
     jobs:
       test: # run tests with specified Crystal version
         parameters:
@@ -110,9 +126,8 @@ commands:
       - db/wait_for_db
       - db/import_data:
           from: "test-data/setup.sql"
-      - crystal/test:
-          environment:
-            DATABASE_URL: mysql://root@localhost/test
+      - crystal/test-with-db:
+          DATABASE_URL: mysql://root@localhost/test
 
 executors:
   crystal-mysql:
