@@ -125,44 +125,69 @@ orbs:
           - cache_save
           - test:
               files: << parameters.files >>
+      test-with-db:
+        parameters:
+          executor:
+            type: executor
+          db-steps:
+            type: steps
+          DATABASE_URL:
+            type: string
+            default: mysql://root@localhost/default
+        steps:
+          - checkout
+          - crystal/cache_restore
+          - crystal/shards_install
+          - crystal/cache_save
+          - steps: << parameters.db-steps >>
+          - test-with-db:
+              files: << parameters.files >>
+              DATABASE_URL: << parameters.DATABASE_URL >>
 
-commands:
-  run_build_and_test:
-    steps:
-      - checkout
-      - crystal/cache_restore
-      - crystal/shards_install
-      - crystal/cache_save
-      - db/wait_for_db
-      - db/import_data:
-          from: "test-data/setup.sql"
-      - crystal/test-with-db:
-          DATABASE_URL: mysql://root@localhost/test
+# commands:
+#   run_build_and_test:
+#     steps:
+#       - checkout
+#       - crystal/cache_restore
+#       - crystal/shards_install
+#       - crystal/cache_save
+#       - db/wait_for_db
+#       - db/import_data:
+#           from: "test-data/setup.sql"
+#       - crystal/test-with-db:
+#           DATABASE_URL: mysql://root@localhost/test
 
-jobs:
-  build-latest:
-    executor: db/crystal-mysql
-    steps:
-      - run_build_and_test
+# jobs:
+#   build-latest:
+#     executor: db/crystal-mysql
+#     steps:
+#       - run_build_and_test
 
-  build-nightly:
-    executor:
-      name: db/crystal-mysql
-      tag: "nightly"
-    steps:
-      - run_build_and_test
+#   build-nightly:
+#     executor:
+#       name: db/crystal-mysql
+#       tag: "nightly"
+#     steps:
+#       - run_build_and_test
 
-  build-0_30_0:
-    executor:
-      name: db/crystal-mysql
-      tag: "0.30.0"
-    steps:
-      - run_build_and_test
+#   build-0_30_0:
+#     executor:
+#       name: db/crystal-mysql
+#       tag: "0.30.0"
+#     steps:
+#       - run_build_and_test
 
 workflows:
   version: 2
   build_and_test:
     jobs:
-      - build-latest
+      - crystal/test-with-db:
+          executor: db/crystal-mysql
+          DATABASE_URL: mysql://root@localhost/test
+          db-steps:
+            - db/wait_for_db
+            - db/import_data:
+                from: "test-data/setup.sql"
+      # - build-latest
       # - build-nightly
       # - build-0_30_0
