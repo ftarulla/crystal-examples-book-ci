@@ -47,7 +47,8 @@ orbs:
             default: ""
         steps:
           - run:
-              name: run tests
+              description: "Run tests with given spec options"
+              name: Run tests
               command: crystal spec << parameters.spec_options >>
     jobs:
       test:
