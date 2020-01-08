@@ -129,10 +129,7 @@ jobs:
     parameters:
       executor:
         type: executor
-      DATABASE_URL:
-        type: string
-        default: mysql://root@localhost/default
-      spec_options: # files separated by space
+      spec_options:
         type: string
         default: ""
     executor: << parameters.executor >>
@@ -148,25 +145,19 @@ jobs:
           name: run tests
           command: crystal spec << parameters.spec_options >>
           environment:
-            DATABASE_URL: << parameters.DATABASE_URL >>
+            DATABASE_URL: mysql://root@localhost/test
 
 workflows:
   version: 2
   build_and_test:
     jobs:
-      - test_with_db_latest:
-          steps:
-            - test_with_db:
-                executor: crystal_mysql
-                DATABASE_URL: mysql://root@localhost/test
-      - test_with_db_nightly:
-          steps:
-            - test_with_db:
-                executor:
-                  name: crystal_mysql
-                  version: "nightly"
-                DATABASE_URL: mysql://root@localhost/test
-      - test_latest:
-          steps:
-            - crystal/test:
-                spec_options: "./spec/game_of_life_spec.cr"
+      - test_with_db:
+          name: "Test with DB and latest"
+          executor: crystal_mysql
+      - test_with_db:
+          name: "Test with DB and nightly"
+          executor:
+            name: crystal_mysql
+            version: "nightly"
+      - crystal/test:
+          spec_options: "./spec/game_of_life_spec.cr"
