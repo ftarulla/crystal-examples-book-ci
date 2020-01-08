@@ -74,7 +74,7 @@ orbs:
 executors:
   crystal_mysql:
     parameters:
-      tag:
+      version:
         type: string
         default: latest
     docker:
