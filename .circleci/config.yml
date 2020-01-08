@@ -80,11 +80,12 @@ executors:
         default: latest
     docker:
       - image: crystallang/crystal:<< parameters.version >>
+        environment:
+          DATABASE_URL: mysql://root@localhost/test
       - image: circleci/mysql:8.0.17
         command: [--default-authentication-plugin=mysql_native_password]
         environment:
           MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
-          DATABASE_URL: mysql://root@localhost/test
 
 # DB commands
 commands:
