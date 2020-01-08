@@ -76,8 +76,6 @@ orbs:
           files: # files separated by space
             type: string
             default: ""
-          environment:
-            type:
         steps:
           - run:
               name: run tests
