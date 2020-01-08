@@ -135,10 +135,10 @@ jobs:
     executor: << parameters.executor >>
     steps:
       - checkout
-      - cache_restore
-      - shards_install
-      - cache_save
-      - wait_for_db
+      - crystal/cache_restore
+      - crystal/shards_install
+      - crystal/cache_save
+      - crystal/wait_for_db
       - import_data:
           from: "test-data/setup.sql"
       - run:
