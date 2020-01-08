@@ -134,6 +134,7 @@ orbs:
           DATABASE_URL:
             type: string
             default: mysql://root@localhost/default
+        executor: << parameters.executor >>
         steps:
           - checkout
           - cache_restore
@@ -141,7 +142,6 @@ orbs:
           - cache_save
           - steps: << parameters.db-steps >>
           - test-with-db:
-              files: << parameters.files >>
               DATABASE_URL: << parameters.DATABASE_URL >>
 
 # commands:
