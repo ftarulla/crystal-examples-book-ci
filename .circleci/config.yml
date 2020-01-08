@@ -132,20 +132,19 @@ jobs:
       spec_options:
         type: string
         default: ""
-    executor: << parameters.executor >>
+    executor:
+      name: << parameters.executor >>
+      environment:
+        DATABASE_URL: mysql://root@localhost/test
     steps:
       - checkout
       - crystal/cache_restore
       - crystal/shards_install
       - crystal/cache_save
-      - crystal/wait_for_db
+      - wait_for_db
       - import_data:
           from: "test-data/setup.sql"
-      - run:
-          name: run tests
-          command: crystal spec << parameters.spec_options >>
-          environment:
-            DATABASE_URL: mysql://root@localhost/test
+      - crystal/test
 
 workflows:
   version: 2
