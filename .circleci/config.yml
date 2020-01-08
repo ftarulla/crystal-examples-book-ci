@@ -108,7 +108,7 @@ commands:
         type: integer
         default: 3306
     steps:
-      - install-dockerize
+      - install_dockerize
       - run:
           name: Wait for db using Dockerize
           command: dockerize -wait << parameters.host >>:<< parameters.port >> -timeout << parameters.timeout >>
