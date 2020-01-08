@@ -43,6 +43,14 @@ orbs:
                 mysql -h 127.0.0.1 -u root --password="" < << parameters.from >>
 
   crystal:
+    executors:
+      crystal-executor:
+        parameters:
+          tag:
+            type: string
+            default: latest
+        docker:
+          - image: crystallang/crystal:<< parameters.tag >>
     commands:
       cache_restore:
         steps:
@@ -63,6 +71,34 @@ orbs:
           - run:
               name: Install dependencies.
               command: shards install
+      test:
+        parameters:
+          files: # files separated by space
+            type: string
+            default: ""
+        steps:
+          - run:
+              name: run tests
+              command: crystal spec << parameters.files >>
+    jobs:
+      test: # run tests with specified Crystal version
+        parameters:
+          version:
+            type: string
+            default: latest
+          files: # files separated by space
+            type: string
+            default: ""
+        executor:
+          name: crystal-executor
+          tag: << parameters.version >>
+        steps:
+          - checkout
+          - cache_restore
+          - shards_install
+          - cache_save
+          - test:
+              files: << parameters.files >>
 
 commands:
   run_build_and_test:
@@ -74,9 +110,7 @@ commands:
       - db/wait_for_db
       - db/import_data:
           from: "test-data/setup.sql"
-      - run:
-          name: test
-          command: crystal spec
+      - crystal/test:
           environment:
             DATABASE_URL: mysql://root@localhost/test
 
@@ -118,5 +152,5 @@ workflows:
   build_and_test:
     jobs:
       - build-latest
-      - build-nightly
-      - build-0_30_0
+      # - build-nightly
+      # - build-0_30_0
