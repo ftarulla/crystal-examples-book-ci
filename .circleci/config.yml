@@ -144,7 +144,8 @@ jobs:
       - wait_for_db
       - import_data:
           from: "test-data/setup.sql"
-      - crystal/test
+      - crystal/test:
+          spec_options: << parameters.spec_options >>
 
 workflows:
   version: 2
@@ -158,5 +159,9 @@ workflows:
           executor:
             name: crystal_mysql
             version: "nightly"
+      - test_with_db:
+          name: "Test with DB and latest, some specs"
+          executor: crystal_mysql
+          spec_options: "./spec/game_of_life_spec.cr"
       - crystal/test:
           spec_options: "./spec/game_of_life_spec.cr"
