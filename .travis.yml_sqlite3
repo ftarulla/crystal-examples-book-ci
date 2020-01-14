@@ -1,0 +1,14 @@
+language: crystal
+crystal:
+  - latest
+
+before_install:
+  - sudo apt-get -y install sqlite3
+
+addons:
+  apt:
+    update: true
+
+script:
+  - sqlite3 --version
+  - crystal spec

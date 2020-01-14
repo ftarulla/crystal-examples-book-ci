@@ -2,13 +2,14 @@ language: crystal
 crystal:
   - latest
 
-before_install:
-  - sudo apt-get -y install sqlite3
+env:
+  - DATABASE_URL="mysql://root@localhost/test"
 
-addons:
-  apt:
-    update: true
+services:
+  - mysql
+
+before_install:
+  - mysql -u root --password="" < test-data/setup.sql
 
 script:
-  - sqlite3 --version
   - crystal spec
