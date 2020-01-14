@@ -11,4 +11,4 @@ addons:
 
 script:
   - sqlite3 --version
-  - crystal spec spec/game_of_life_spec.cr
+  - crystal spec
