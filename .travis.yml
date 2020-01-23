@@ -9,7 +9,8 @@ services:
   - mysql
 
 before_install:
-  - mysql -u root --password="" < test-data/setup.sql
+  - mysql -e "CREATE DATABASE IF NOT EXISTS $DATABASE_URL ;"
+  - mysql -u root --password="" $DATABASE_URL < test-data/setup.sql
 
 script:
   - crystal spec
