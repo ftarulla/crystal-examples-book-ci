@@ -3,13 +3,14 @@ crystal:
   - latest
 
 env:
-  - DATABASE_URL="mysql://root@localhost/test"
+  - DATABASE_NAME="test"
+  - DATABASE_URL="mysql://root@localhost/$DATABASE_NAME"
 
 services:
   - mysql
 
 before_install:
-  - DATABASE_URL=$DATABASE_URL mysql -u root --password="" < test-data/setup.sql
+  - DATABASE_NAME=$DATABASE_NAME mysql -u root --password="" < test-data/setup.sql
 
 script:
   - crystal spec
