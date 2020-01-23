@@ -9,7 +9,7 @@ services:
   - mysql
 
 before_install:
-  - mysql -e "CREATE DATABASE IF NOT EXISTS $DATABASE_URL ;"
+  - mysql -e "CREATE DATABASE IF NOT EXISTS " $DATABASE_URL ";"
   - mysql -u root --password="" $DATABASE_URL < test-data/setup.sql
 
 script:
