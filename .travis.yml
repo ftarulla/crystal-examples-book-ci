@@ -3,8 +3,9 @@ crystal:
   - latest
 
 env:
-  - DATABASE_NAME="test"
-  - DATABASE_URL="mysql://root@localhost/$DATABASE_NAME"
+  global:
+    - DATABASE_NAME=test
+    - DATABASE_URL=mysql://root@localhost/$DATABASE_NAME
 
 services:
   - mysql
