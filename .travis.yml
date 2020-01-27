@@ -11,6 +11,7 @@ services:
   - mysql
 
 before_install:
+  - echo $DATABASE_URL
   - DATABASE_NAME=$DATABASE_NAME mysql -u root --password="" < test-data/setup.sql
 
 script:
