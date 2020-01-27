@@ -1,18 +1,10 @@
-language: crystal
-crystal:
-  - latest
-
-env:
-  global:
-    - DATABASE_NAME=test
-    - DATABASE_URL=mysql://root@localhost/$DATABASE_NAME
+language: minimal #bash
 
 services:
-  - mysql
-
-before_install:
-  - mysql -e "CREATE DATABASE IF NOT EXISTS $DATABASE_NAME;"
-  - mysql -u root --password="" $DATABASE_NAME < test-data/setup.sql
+  - docker
 
 script:
-  - crystal spec
+  - |
+    docker run -v $PWD:/src -w /src crystallang/crystal:0.31.1
+    apt-get update && apt-get install -y libsqlite3-dev
+  - docker run -v $PWD:/src -w /src crystallang/crystal:0.31.1 crystal spec game_of_life_spec.cr

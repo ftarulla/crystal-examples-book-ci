@@ -1,0 +1,18 @@
+language: crystal
+crystal:
+  - latest
+
+env:
+  global:
+    - DATABASE_NAME=test
+    - DATABASE_URL=mysql://root@localhost/$DATABASE_NAME
+
+services:
+  - mysql
+
+before_install:
+  - mysql -e "CREATE DATABASE IF NOT EXISTS $DATABASE_NAME;"
+  - mysql -u root --password="" $DATABASE_NAME < test-data/setup.sql
+
+script:
+  - crystal spec
