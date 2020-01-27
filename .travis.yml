@@ -1,9 +1,12 @@
-language: minimal #bash
+language: minimal
 
 services:
   - docker
 
+before_install:
+  # build image using Dockerfile:
+  - docker build -t testing .
+
 script:
-  - docker run -v $PWD:/src -w /src crystallang/crystal:0.31.1 apt-get update
-  - docker run -v $PWD:/src -w /src crystallang/crystal:0.31.1 apt-get install -y libsqlite3-dev
-  - docker run -v $PWD:/src -w /src crystallang/crystal:0.31.1 crystal spec ./spec/game_of_life_spec.cr
+  # run specs in the container
+  - docker run -v $PWD:/src -w /src testing crystal spec
