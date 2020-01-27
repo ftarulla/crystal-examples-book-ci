@@ -12,7 +12,8 @@ services:
 
 before_install:
   - echo $DATABASE_URL
-  - DATABASE_NAME=$DATABASE_NAME mysql -u root --password="" < test-data/setup.sql
+  - mysql -e "CREATE DATABASE IF NOT EXISTS $DATABASE_NAME ;"
+  - mysql -u root --password="" $DATABASE_NAME < test-data/setup.sql
 
 script:
   - crystal spec
