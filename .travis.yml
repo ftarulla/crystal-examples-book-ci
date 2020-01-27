@@ -4,7 +4,6 @@ services:
   - docker
 
 script:
-  - |
-    docker run -v $PWD:/src -w /src crystallang/crystal:0.31.1
-    apt-get update && apt-get install -y libsqlite3-dev
-  - docker run -v $PWD:/src -w /src crystallang/crystal:0.31.1 crystal spec game_of_life_spec.cr
+  - docker run -v $PWD:/src -w /src crystallang/crystal:0.31.1 apt-get update
+  - docker run -v $PWD:/src -w /src crystallang/crystal:0.31.1 apt-get install -y libsqlite3-dev
+  - docker run -v $PWD:/src -w /src crystallang/crystal:0.31.1 crystal spec ./spec/game_of_life_spec.cr
