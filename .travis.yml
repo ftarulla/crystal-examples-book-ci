@@ -9,4 +9,4 @@ before_install:
 
 script:
   # run specs in the container
-  - docker run -v $PWD:/src -w /src testing crystal spec
+  - docker run -v $PWD:/src -w /src testing crystal spec ./spec/game_of_life_spec.cr
