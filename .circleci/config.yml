@@ -4,7 +4,8 @@ executors:
       - image: 'crystallang/crystal:latest'
         environment:
           DATABASE_URL: 'mysql://root@localhost/db'
-      - image: 'mysql:5.7'
+      - image: circleci/mysql:8.0.17
+        command: [--default-authentication-plugin=mysql_native_password]
         environment:
           MYSQL_DATABASE: db
           MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
@@ -18,7 +19,7 @@ workflows:
           pre-steps:
             - run:
                 name: Waiting for service to start (check dockerize)
-                command: sleep 5
+                command: sleep 1m
             - run:
                 name: Install MySQL CLI; Import dummy data
                 command: |
