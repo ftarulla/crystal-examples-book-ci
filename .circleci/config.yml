@@ -3,7 +3,7 @@ workflows:
   build:
     jobs:
       - crystal/test:
-          spec-options: "game_of_life_spec"
+          spec-options: "./spec/game_of_life_spec.cr"
 
 orbs:
   crystal: manastech/crystal@0.3
