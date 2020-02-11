@@ -2,7 +2,9 @@ workflows:
   version: 2
   build:
     jobs:
-      - crystal/test
+      - crystal/test:
+          spec-options: "game_of_life_spec"
+
 orbs:
   crystal: manastech/crystal@0.3
 version: 2.1
