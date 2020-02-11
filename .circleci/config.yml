@@ -23,7 +23,6 @@ workflows:
             - run:
                 name: Install MySQL CLI; Import dummy data
                 command: |
-                  apt-get install -y mysql-client
                   mysql -h 127.0.0.1 -u root --password="" < test-data/setup.sql
 
 orbs:
