@@ -19,6 +19,11 @@ workflows:
             - run:
                 name: Waiting for service to start (check dockerize)
                 command: sleep 5
+            - run:
+                name: Install MySQL CLI; Import dummy data
+                command: |
+                  apt-get install -y mysql-client
+                  mysql -h 127.0.0.1 -u root --password="" < test-data/setup.sql
 
 orbs:
   crystal: manastech/crystal@0.3
