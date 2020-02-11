@@ -11,5 +11,4 @@ workflows:
 
 orbs:
   crystal: manastech/crystal@0.3
-
-  version: 2.1
+version: 2.1
