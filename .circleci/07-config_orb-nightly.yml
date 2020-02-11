@@ -1,0 +1,14 @@
+workflows:
+  version: 2
+  build:
+    jobs:
+      - crystal/test:
+          name: test-on-nightly
+          executor:
+            name: crystal/docker
+            tag: nightly
+          spec-options: "./spec/game_of_life_spec.cr"
+
+orbs:
+  crystal: manastech/crystal@0.3
+version: 2.1
