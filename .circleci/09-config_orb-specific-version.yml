@@ -3,9 +3,12 @@ workflows:
   build:
     jobs:
       - crystal/test:
-          pre-steps:
-            - run: apt-get update && apt-get install -y libsqlite3-dev
+          name: test-on-nightly
+          executor:
+            name: crystal/docker
+            tag: "0.30.0"
           spec-options: "./spec/game_of_life_spec.cr"
+
 orbs:
   crystal: manastech/crystal@0.3
 version: 2.1
