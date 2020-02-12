@@ -1,11 +1,31 @@
+executors:
+  crystal_mysql:
+    docker:
+      - image: 'mysql:5.7'
+        environment:
+          MYSQL_DATABASE: db
+          MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
+      - image: 'crystallang/crystal:latest'
+        environment:
+          DATABASE_URL: 'mysql://root@localhost/db'
+
+
 workflows:
   version: 2
   build:
     jobs:
       - crystal/test:
+          executor: crystal_mysql
           pre-steps:
-            - run: apt-get update && apt-get install -y libsqlite3-dev
-          spec-options: "./spec/game_of_life_spec.cr"
+            - run:
+                name: Waiting for service to start (check dockerize)
+                command: sleep 1m
+            - run:
+                name: Install MySQL CLI; Import dummy data
+                command: |
+                        apt-get install -y mysql-client
+                        mysql -h 127.0.0.1 -u root --password="" < test-data/setup.sql
+
 orbs:
   crystal: manastech/crystal@0.3
 version: 2.1
