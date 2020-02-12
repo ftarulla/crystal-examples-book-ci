@@ -1,13 +1,13 @@
 executors:
   crystal_mysql:
     docker:
+      - image: 'crystallang/crystal:latest'
+        environment:
+          DATABASE_URL: 'mysql://root@localhost/db'
       - image: 'mysql:5.7'
         environment:
           MYSQL_DATABASE: db
           MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
-      - image: 'crystallang/crystal:latest'
-        environment:
-          DATABASE_URL: 'mysql://root@localhost/db'
 
 workflows:
   version: 2
@@ -19,6 +19,7 @@ workflows:
             - run:
                 name: Waiting for service to start (check dockerize)
                 command: sleep 1m
+            - checkout
             - run:
                 name: Install MySQL CLI; Import dummy data
                 command: |
