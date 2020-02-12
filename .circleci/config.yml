@@ -1,14 +1,13 @@
 executors:
   crystal_mysql:
     docker:
+      - image: 'crystallang/crystal:latest'
+        environment:
+          DATABASE_URL: 'mysql://root@localhost/db'
       - image: 'mysql:5.7'
         environment:
           MYSQL_DATABASE: db
           MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
-      - image: 'crystallang/crystal:latest'
-        environment:
-          DATABASE_URL: 'mysql://root@localhost/db'
-
 
 workflows:
   version: 2
@@ -24,6 +23,7 @@ workflows:
                 name: Install MySQL CLI; Import dummy data
                 command: |
                         apt-get install -y mysql-client
+                        ls -lah
                         mysql -h 127.0.0.1 -u root --password="" < test-data/setup.sql
 
 orbs:
